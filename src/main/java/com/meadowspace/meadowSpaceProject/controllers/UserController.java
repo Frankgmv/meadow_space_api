@@ -1,5 +1,6 @@
 package com.meadowspace.meadowSpaceProject.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +77,8 @@ public class UserController {
 		}
 	}
 
-	@PutMapping(value = "/user/{id}", consumes = { MediaType.ALL_VALUE })
+	// No sirve
+	@PutMapping(value = "/user/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody DataUser dataUser) throws Exception {
 		try {
 		
@@ -91,26 +93,22 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	/*
-	 * va en update
-	 * 
-	 * if (imagen != null && !imagen.isEmpty()) { String uploadedFileUrl =
-	 * uploadFileService.handleFileUpload(imagen);
-	 * 
-	 * dataUser.setPicture(uploadedFileUrl); } Role role =
-	 * Role.valueOf(dataUser.getRol().toString()); dataUser.setRol(role);
-	 * 
-	 * User updatedUser = userService.updateUser(id, dataUser.getName(),
-	 * dataUser.getSurname(), dataUser.getEmail(), dataUser.getPhone(),
-	 * dataUser.getCellphone(), dataUser.getAddress(), dataUser.getPicture(),
-	 * dataUser.getRol(), dataUser.getPassword()); return new
-	 * ResponseEntity<>(updatedUser, HttpStatus.OK);
-	 */
+	
 
 	@DeleteMapping(value = "/user/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) throws MyError {
-		userService.deleteUser(id);
-		return new ResponseEntity<>("Usuario Eliminado", HttpStatus.OK);
+	public ResponseEntity<String> deleteUser(@PathVariable Long id) throws IOException {
+		try {
+			Optional<User> user = userService.obtenerUsuarioPorId(id);
+
+			if (user.isPresent() && user.get().getPicture() != null) {
+				String path = uploadFileService.deleteFile(user.get().getPicture());
+				System.out.println(path);
+			}
+			userService.deleteUser(id);
+			return new ResponseEntity<>("Usuario Eliminado", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }
