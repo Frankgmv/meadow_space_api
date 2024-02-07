@@ -39,7 +39,7 @@ public class User {
 
     private String address;
     
-    @Column(name = "picture")
+    @Column(name = "picture", nullable = true)
     @Lob
     private byte[] picture;
 
