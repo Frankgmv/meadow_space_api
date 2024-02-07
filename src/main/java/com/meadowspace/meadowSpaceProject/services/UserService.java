@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.meadowspace.meadowSpaceProject.entity.Role;
 import com.meadowspace.meadowSpaceProject.entity.User;
-import com.meadowspace.meadowSpaceProject.exceptions.MyError;
 import com.meadowspace.meadowSpaceProject.repositories.IUserRepository;
 
 @Service
@@ -22,16 +21,16 @@ public class UserService {
 
 	public void crearUser(Long id, String name, String surname, String email, String phone, String cellphone,
 			String address, String picture, String password, Role rol) throws Exception {
-		
+
 		validarUsuario(id, name, surname, email, phone, cellphone, address, password);
-		
+
 		Optional<User> existingUser = userRepository.findById(id);
-	    if (existingUser.isPresent()) {
-	        throw new Exception("El usuario con el ID " + id + " ya existe en la base de datos.");
-	    }
-			
+		if (existingUser.isPresent()) {
+			throw new Exception("El usuario con el ID " + id + " ya existe en la base de datos.");
+		}
+
 		User user = new User();
-		
+
 		user.setId(id);
 		user.setName(name);
 		user.setSurname(surname);
@@ -42,76 +41,87 @@ public class UserService {
 		user.setPicture(picture);
 		user.setRol(rol);
 		user.setPassword(password);
-		
+
 		userRepository.save(user);
 	}
-	
+
 	public List<User> listarUser() {
-        return userRepository.findAll();
-    }
-	
-	public Optional<User> obtenerUsuarioPorId(Long id) {
-	    return userRepository.findById(id);
+		return userRepository.findAll();
 	}
-	
-	public void deleteUser(Long id) throws MyError {
-        Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
-            throw new MyError("Usuario con ID " + id + " no encontrado.");
-        }
-        userRepository.delete(user.get());
-    }
 
-    public User updateUser(Long id, String name, String surname, String email, String phone, String cellphone,
-                           String address, String picture, Role rol, String password) throws MyError {
-        Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
-            throw new MyError("Usuario con ID " + id + " no encontrado.");
-        }
+	public Optional<User> obtenerUsuarioPorId(Long id) {
+		return userRepository.findById(id);
+	}
 
-        User updatedUser = user.get();
-        updatedUser.setName(name);
-        updatedUser.setSurname(surname);
-        updatedUser.setEmail(email);
-        updatedUser.setPhone(phone);
-        updatedUser.setCellphone(cellphone);
-        updatedUser.setAddress(address);
-        updatedUser.setPicture(picture);
-        updatedUser.setRol(rol);
-        updatedUser.setPassword(password);
+	public void deleteUser(Long id) throws Exception {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new Exception("Usuario con ID " + id + " no encontrado.");
+		}
+		userRepository.delete(user.get());
+	}
 
-        return userRepository.save(updatedUser);
-    }
-	
+	public User updateUser(Long id, String name, String surname, String email, String phone, String cellphone,
+			String address, Role rol, String password) throws Exception {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new Exception("Usuario con ID " + id + " no encontrado.");
+		}
+
+		User updatedUser = user.get();
+		updatedUser.setName(name);
+		updatedUser.setSurname(surname);
+		updatedUser.setEmail(email);
+		updatedUser.setPhone(phone);
+		updatedUser.setCellphone(cellphone);
+		updatedUser.setAddress(address);
+		updatedUser.setPassword(password);
+		updatedUser.setRol(rol);
+
+		return userRepository.save(updatedUser);
+	}
+
+	public User updateUserPicture(Long id, String picture) throws Exception {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new Exception("Usuario con ID " + id + " no encontrado.");
+		}
+
+		User updatedUser = user.get();
+		updatedUser.setPicture(picture);
+
+		return userRepository.save(updatedUser);
+	}
+
 	private void validarUsuario(Long id, String name, String surname, String email, String phone, String cellphone,
-			String address, String password) throws MyError {
+			String address, String password) throws Exception {
 		if (id == null) {
-			throw new MyError(" id no puede ser nulo !!!");
+			throw new Exception(" id no puede ser nulo !!!");
 		}
 
 		if (name == null || name.isEmpty()) {
-			throw new MyError(" Nombre no puede ser vacío o nulo !!!");
+			throw new Exception(" Nombre no puede ser vacío o nulo !!!");
 		}
 
 		if (surname == null || surname.isEmpty()) {
-			throw new MyError(" Apellido no puede ser vacío o nulo !!!");
+			throw new Exception(" Apellido no puede ser vacío o nulo !!!");
 		}
 
 		if (email == null || email.isEmpty()) {
-			throw new MyError(" Correo no puede ser vacío o nulo !!!");
+			throw new Exception(" Correo no puede ser vacío o nulo !!!");
 		}
-		
+
 		if (cellphone == null || cellphone.isEmpty()) {
-			throw new MyError(" Celular no puede ser vacío o nulo !!!");
+			throw new Exception(" Celular no puede ser vacío o nulo !!!");
 		}
-		
+
 		if (address == null || address.isEmpty()) {
-			throw new MyError(" Dirección no puede ser vacío o nulo !!!");
+			throw new Exception(" Dirección no puede ser vacío o nulo !!!");
 		}
-		
-		if (password== null || password.isEmpty()) {
-			throw new MyError(" Contraseña no puede ser vacío o nulo !!!");
+
+		if (password == null || password.isEmpty()) {
+			throw new Exception(" Contraseña no puede ser vacío o nulo !!!");
 		}
 	}
-	
+
 }

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.meadowspace.meadowSpaceProject.data.DataUser;
 import com.meadowspace.meadowSpaceProject.entity.Role;
 import com.meadowspace.meadowSpaceProject.entity.User;
-import com.meadowspace.meadowSpaceProject.exceptions.MyError;
 import com.meadowspace.meadowSpaceProject.services.UserService;
 import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
 
@@ -77,23 +76,44 @@ public class UserController {
 		}
 	}
 
-	// No sirve
 	@PutMapping(value = "/user/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody DataUser dataUser) throws Exception {
 		try {
-		
-			Role role = Role.valueOf(dataUser.getRol().toString());
-			dataUser.setRol(role);
-
+			if (dataUser.getRol() != null) {
+				Role role = Role.valueOf(dataUser.getRol().toString());
+				dataUser.setRol(role);
+			}
 			User updatedUser = userService.updateUser(id, dataUser.getName(), dataUser.getSurname(),
 					dataUser.getEmail(), dataUser.getPhone(), dataUser.getCellphone(), dataUser.getAddress(),
-					dataUser.getPicture(), dataUser.getRol(), dataUser.getPassword());
-			return new ResponseEntity<>(updatedUser.toString(), HttpStatus.OK);
+					dataUser.getRol(), dataUser.getPassword());
+
+			return new ResponseEntity<>("Usuario actualizado", HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	@PutMapping(value = "/user-picture/{id}")
+	public ResponseEntity<String> updateUserPicture(@PathVariable Long id, @RequestParam(required = false) MultipartFile imagen) throws Exception {
+		try {
+			Optional<User> user = userService.obtenerUsuarioPorId(id);
+
+			if (user.isPresent() && user.get().getPicture() != null) {
+				uploadFileService.deleteFile(user.get().getPicture());
+			}
+			
+			if (imagen != null) {
+				String uploadedFileUrl = uploadFileService.handleFileUpload(imagen);			
+				User updatedUser = userService.updateUserPicture(id, uploadedFileUrl);
+			}else {
+				User updatedUser = userService.updateUserPicture(id, null);				
+			}
+
+			return new ResponseEntity<>("Foto atualizada", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@DeleteMapping(value = "/user/{id}")
 	public ResponseEntity<String> deleteUser(@PathVariable Long id) throws IOException {
