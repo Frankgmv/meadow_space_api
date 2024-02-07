@@ -33,6 +33,110 @@ public class Property {
 	private String type;
 	private String location;
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	public List<CustomerOpinion> getCustomerOpinions() {
+		return customerOpinions;
+	}
+
+	public void setCustomerOpinions(List<CustomerOpinion> customerOpinions) {
+		this.customerOpinions = customerOpinions;
+	}
+
+	public List<Services> getServices() {
+		return services;
+	}
+
+	public void setServices(List<Services> services) {
+		this.services = services;
+	}
+
+	public List<MultimediaProperty> getMultimediaProperties() {
+		return multimediaProperties;
+	}
+
+	public void setMultimediaProperties(List<MultimediaProperty> multimediaProperties) {
+		this.multimediaProperties = multimediaProperties;
+	}
+
+	public List<MultimediaOpinions> getMultimediaOpinions() {
+		return multimediaOpinions;
+	}
+
+	public void setMultimediaOpinions(List<MultimediaOpinions> multimediaOpinions) {
+		this.multimediaOpinions = multimediaOpinions;
+	}
+
 	// Ready
 	@ManyToOne
 	@JoinColumn(name = "user_id")

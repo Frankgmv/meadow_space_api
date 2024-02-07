@@ -32,6 +32,62 @@ public class Reservation {
 	private String finishDate;
 	private String descriptionEvent;
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getInictialDate() {
+		return inictialDate;
+	}
+
+	public void setInictialDate(String inictialDate) {
+		this.inictialDate = inictialDate;
+	}
+
+	public String getFinishDate() {
+		return finishDate;
+	}
+
+	public void setFinishDate(String finishDate) {
+		this.finishDate = finishDate;
+	}
+
+	public String getDescriptionEvent() {
+		return descriptionEvent;
+	}
+
+	public void setDescriptionEvent(String descriptionEvent) {
+		this.descriptionEvent = descriptionEvent;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Property getProperty() {
+		return property;
+	}
+
+	public void setProperty(Property property) {
+		this.property = property;
+	}
+
 	// Ready
 	@ManyToOne
     @JoinColumn(name = "user_id")
