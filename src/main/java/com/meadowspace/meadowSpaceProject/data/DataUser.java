@@ -1,6 +1,5 @@
 package com.meadowspace.meadowSpaceProject.data;
 
-import java.util.Arrays;
 
 import com.meadowspace.meadowSpaceProject.entity.Role;
 
@@ -19,7 +18,7 @@ public class DataUser {
 
     private String address;
     
-    private byte[] picture;
+    private String picture;
 
     private String password;
     
@@ -81,11 +80,11 @@ public class DataUser {
 		this.address = address;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
@@ -108,7 +107,7 @@ public class DataUser {
 	@Override
 	public String toString() {
 		return "DataUser [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", phone="
-				+ phone + ", cellphone=" + cellphone + ", address=" + address + ", picture=" + Arrays.toString(picture)
+				+ phone + ", cellphone=" + cellphone + ", address=" + address + ", picture=" +picture
 				+ ", password=" + password + ", rol=" + rol + "]";
 	}
 }
