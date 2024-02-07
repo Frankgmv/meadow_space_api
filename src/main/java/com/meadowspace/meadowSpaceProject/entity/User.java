@@ -38,10 +38,8 @@ public class User {
     private String cellphone;
 
     private String address;
-    
-    @Column(name = "picture", nullable = true)
-    @Lob
-    private byte[] picture;
+   
+    private String picture;
 
     private String password;
     
@@ -106,11 +104,11 @@ public class User {
 		this.address = address;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
@@ -130,37 +128,6 @@ public class User {
 		this.rol = rol;
 	}
 
-	public List<Property> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
-	}
-
-	public List<Reservation> getReservations() {
-		return reservations;
-	}
-
-	public void setReservations(List<Reservation> reservations) {
-		this.reservations = reservations;
-	}
-
-	public List<CustomerOpinion> getCustomerOpinions() {
-		return customerOpinions;
-	}
-
-	public void setCustomerOpinions(List<CustomerOpinion> customerOpinions) {
-		this.customerOpinions = customerOpinions;
-	}
-
-	public List<MultimediaOpinions> getMultimediaOpinions() {
-		return multimediaOpinions;
-	}
-
-	public void setMultimediaOpinions(List<MultimediaOpinions> multimediaOpinions) {
-		this.multimediaOpinions = multimediaOpinions;
-	}
 
 	// Ready
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

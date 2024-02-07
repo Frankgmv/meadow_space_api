@@ -34,33 +34,15 @@ public class MultimediaOpinions {
 		this.id = id;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Property getProperty() {
-		return property;
-	}
-
-	public void setProperty(Property property) {
-		this.property = property;
-	}
-
-	@Column(name = "picture")
-    @Lob
-    private byte[] picture;
+    private String picture;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

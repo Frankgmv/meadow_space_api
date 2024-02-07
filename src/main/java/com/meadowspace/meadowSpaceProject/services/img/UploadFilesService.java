@@ -1,4 +1,4 @@
-package com.meadowspace.meadowSpaceProject.services;
+package com.meadowspace.meadowSpaceProject.services.img;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.meadowspace.meadowSpaceProject.services.impl.IUploadFilesService;
 
 @Service
-public class UploadFilesService implements IUploadFilesService{
+public class UploadFilesService implements IUploadFilesService {
 	@Override
 	public String handleFileUpload(MultipartFile file) throws Exception {
 		try {
@@ -23,14 +23,16 @@ public class UploadFilesService implements IUploadFilesService{
 			Long maxfileSize = (long) (6 * 1024* 1024);
 			
 			if (fileSize > maxfileSize) {
-				return "Archivo no puede ser mayor a 6MB";
+				// return "Archivo no puede ser mayor a 6MB";
+				throw new Exception("Archivo no puede ser mayor a 6MB");
 			}
 			
 			// Type of file
 			if (!fileOriginaName.endsWith(".jpg") &&
 				!fileOriginaName.endsWith(".jpeg") &&
 				!fileOriginaName.endsWith(".png")) {
-				return "Solo recibe formato .jpg .jpeg .png";
+				// return "Solo recibe formato .jpg .jpeg .png";
+				throw new Exception("Solo recibe formato .jpg .jpeg .png");
 			}
 			
 			String fileExtention = fileOriginaName.substring(fileOriginaName.lastIndexOf("."));

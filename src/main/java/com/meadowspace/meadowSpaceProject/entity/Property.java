@@ -81,62 +81,6 @@ public class Property {
 		this.location = location;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-	public List<Reservation> getReservations() {
-		return reservations;
-	}
-
-	public void setReservations(List<Reservation> reservations) {
-		this.reservations = reservations;
-	}
-
-	public List<CustomerOpinion> getCustomerOpinions() {
-		return customerOpinions;
-	}
-
-	public void setCustomerOpinions(List<CustomerOpinion> customerOpinions) {
-		this.customerOpinions = customerOpinions;
-	}
-
-	public List<Services> getServices() {
-		return services;
-	}
-
-	public void setServices(List<Services> services) {
-		this.services = services;
-	}
-
-	public List<MultimediaProperty> getMultimediaProperties() {
-		return multimediaProperties;
-	}
-
-	public void setMultimediaProperties(List<MultimediaProperty> multimediaProperties) {
-		this.multimediaProperties = multimediaProperties;
-	}
-
-	public List<MultimediaOpinions> getMultimediaOpinions() {
-		return multimediaOpinions;
-	}
-
-	public void setMultimediaOpinions(List<MultimediaOpinions> multimediaOpinions) {
-		this.multimediaOpinions = multimediaOpinions;
-	}
-
 	// Ready
 	@ManyToOne
 	@JoinColumn(name = "user_id")
