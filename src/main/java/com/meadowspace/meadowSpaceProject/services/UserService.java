@@ -10,6 +10,8 @@ import com.meadowspace.meadowSpaceProject.entity.Role;
 import com.meadowspace.meadowSpaceProject.entity.User;
 import com.meadowspace.meadowSpaceProject.repositories.IUserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
 	@Autowired
@@ -19,6 +21,7 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
+	@Transactional
 	public void crearUser(Long id, String name, String surname, String email, String phone, String cellphone,
 			String address, String picture, String password, Role rol) throws Exception {
 
@@ -53,14 +56,7 @@ public class UserService {
 		return userRepository.findById(id);
 	}
 
-	public void deleteUser(Long id) throws Exception {
-		Optional<User> user = userRepository.findById(id);
-		if (!user.isPresent()) {
-			throw new Exception("Usuario con ID " + id + " no encontrado.");
-		}
-		userRepository.delete(user.get());
-	}
-
+	@Transactional
 	public User updateUser(Long id, String name, String surname, String email, String phone, String cellphone,
 			String address, Role rol, String password) throws Exception {
 		Optional<User> user = userRepository.findById(id);
@@ -81,6 +77,7 @@ public class UserService {
 		return userRepository.save(updatedUser);
 	}
 
+	@Transactional
 	public User updateUserPicture(Long id, String picture) throws Exception {
 		Optional<User> user = userRepository.findById(id);
 		if (!user.isPresent()) {
@@ -93,6 +90,14 @@ public class UserService {
 		return userRepository.save(updatedUser);
 	}
 
+	public void deleteUser(Long id) throws Exception {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new Exception("Usuario con ID " + id + " no encontrado.");
+		}
+		userRepository.delete(user.get());
+	}
+	
 	private void validarUsuario(Long id, String name, String surname, String email, String phone, String cellphone,
 			String address, String password) throws Exception {
 		if (id == null) {

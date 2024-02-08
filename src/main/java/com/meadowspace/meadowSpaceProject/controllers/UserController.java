@@ -83,7 +83,7 @@ public class UserController {
 				Role role = Role.valueOf(dataUser.getRol().toString());
 				dataUser.setRol(role);
 			}
-			User updatedUser = userService.updateUser(id, dataUser.getName(), dataUser.getSurname(),
+			userService.updateUser(id, dataUser.getName(), dataUser.getSurname(),
 					dataUser.getEmail(), dataUser.getPhone(), dataUser.getCellphone(), dataUser.getAddress(),
 					dataUser.getRol(), dataUser.getPassword());
 
@@ -93,7 +93,7 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping(value = "/user-picture/{id}")
+	@PutMapping("/user-picture/{id}")
 	public ResponseEntity<String> updateUserPicture(@PathVariable Long id, @RequestParam(required = false) MultipartFile imagen) throws Exception {
 		try {
 			Optional<User> user = userService.obtenerUsuarioPorId(id);
