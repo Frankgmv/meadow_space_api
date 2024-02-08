@@ -32,7 +32,16 @@ public class Property {
 	private String description;
 	private String type;
 	private String location;
-	
+
+	// Ready
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	// Ready
+	@ManyToOne
+	private Category category;
+
 	public String getId() {
 		return id;
 	}
@@ -81,31 +90,38 @@ public class Property {
 		this.location = location;
 	}
 
-	// Ready
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-    private User user;
-	
-	// Ready
-	@ManyToOne
-	private Category category;
-	
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
 	// Ready
 	@OneToMany(mappedBy = "property")
-    private List<Reservation> reservations;
-	
+	private List<Reservation> reservations;
+
 	// Ready
 	@OneToMany(mappedBy = "property")
 	private List<CustomerOpinion> customerOpinions;
-	
+
 	// Ready
 	@OneToMany(mappedBy = "property")
 	private List<Services> services;
-	
+
 	// Ready
 	@OneToMany(mappedBy = "property")
 	private List<MultimediaProperty> multimediaProperties;
-	
+
 	@OneToMany(mappedBy = "property")
 	private List<MultimediaOpinions> multimediaOpinions;
 }
