@@ -64,9 +64,9 @@ public class UploadFilesService implements IUploadFilesService {
 	public String deleteFile(String nameFile) throws IOException {
 		Path path = Paths.get(FOLDER, nameFile);
 
-		if (!Files.exists(path)) {
-			throw new FileNotFoundException("El archivo " + nameFile + " no existe en la carpeta especificada");
-		}
+//		if (!Files.exists(path)) {
+//			throw new FileNotFoundException("El archivo " + nameFile + " no existe en la carpeta especificada");
+//		}
 
 		Files.delete(path);
 

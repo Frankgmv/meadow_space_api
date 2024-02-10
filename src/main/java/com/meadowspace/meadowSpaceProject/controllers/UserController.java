@@ -118,10 +118,11 @@ public class UserController {
 		try {
 			Optional<User> user = userService.obtenerUsuarioPorId(id);
 
+			userService.deleteUser(id);
+
 			if (user.isPresent() && user.get().getPicture() != null) {
 				uploadFileService.deleteFile(user.get().getPicture());
 			}
-			userService.deleteUser(id);
 			return new ResponseEntity<>("Usuario Eliminado", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

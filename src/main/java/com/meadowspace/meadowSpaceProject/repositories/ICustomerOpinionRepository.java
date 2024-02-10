@@ -12,6 +12,6 @@ import com.meadowspace.meadowSpaceProject.entity.CustomerOpinion;
 @Repository
 public interface ICustomerOpinionRepository extends JpaRepository<CustomerOpinion, String> {
 	// Buscar propiedades por name y id propietario
-		@Query("SELECT op FROM CustomerOpinion op WHERE op.property.id= :propertyId and op.user.id = :userId")
-		public List<CustomerOpinion> consultarComentario(@Param("userId") Long userId, @Param("propertyId") Long propertyId);
+		@Query("SELECT op FROM CustomerOpinion op WHERE op.property.id= :propertyId")
+		public List<CustomerOpinion> consultarComentario(@Param("propertyId") String propertyId);
 }

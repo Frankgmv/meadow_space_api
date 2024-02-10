@@ -121,7 +121,4 @@ public class Property {
 	// Ready
 	@OneToMany(mappedBy = "property")
 	private List<MultimediaProperty> multimediaProperties;
-
-	@OneToMany(mappedBy = "property")
-	private List<MultimediaOpinions> multimediaOpinions;
 }

@@ -140,9 +140,5 @@ public class User {
     // Ready
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CustomerOpinion> customerOpinions;
-    
- // Ready
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<MultimediaOpinions> multimediaOpinions;
 
 }

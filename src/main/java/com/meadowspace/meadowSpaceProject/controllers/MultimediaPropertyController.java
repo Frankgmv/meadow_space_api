@@ -63,11 +63,11 @@ public class MultimediaPropertyController {
 				throw new Exception("Archivo no encontrado");
 			}
 
-			if (file.isPresent() && file.get().getPicture() != null) {
+			multimediaPropertyService.deleteFileById(id);
+			
+			if (file.get().getPicture() != null) {
 				uploadFileService.deleteFile(file.get().getPicture());
 			}
-			
-			multimediaPropertyService.deleteFileById(id);
 			return new ResponseEntity<>("Archivo eliminado", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
