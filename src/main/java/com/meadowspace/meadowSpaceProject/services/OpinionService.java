@@ -32,6 +32,14 @@ public class OpinionService {
 	public List<CustomerOpinion> consultarOpiniones(String propertyId){
 		return customerOpinionRepository.consultarComentario(propertyId);
 	}
+	
+	public Optional<CustomerOpinion> consultarOpinionById(String id){
+		return customerOpinionRepository.findById(id);
+	}
+	
+	public List<CustomerOpinion> consultarTodasLasOpiniones(){
+		return customerOpinionRepository.findAll();
+	}
 
 	public void crearCommentOpinion(dataOpinionAndMult data) throws Exception {
 		

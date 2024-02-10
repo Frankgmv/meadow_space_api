@@ -26,8 +26,7 @@ public class OpinionController {
 	private final UploadFilesService uploadFileService;
 	OpinionService opinionService;
 
-	public OpinionController(UploadFilesService uploadFileService,
-			OpinionService opinionAndMultService) {
+	public OpinionController(UploadFilesService uploadFileService, OpinionService opinionAndMultService) {
 		this.uploadFileService = uploadFileService;
 		this.opinionService = opinionAndMultService;
 	}
@@ -47,14 +46,27 @@ public class OpinionController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+
 	@GetMapping("/opinion/{id}")
-	public ResponseEntity<List<CustomerOpinion>> obtenerOpinions(@PathVariable String id){
+	public ResponseEntity<CustomerOpinion> obtenerOpinionById(@PathVariable String id) {
+			Optional<CustomerOpinion> opinion = opinionService.obtenerById(id);
+			return new ResponseEntity<>(opinion.get(), HttpStatus.OK);
+	}
+
+	@GetMapping("/opinion-property/{id}")
+	public ResponseEntity<List<CustomerOpinion>> obtenerOpinions(@PathVariable String id) {
 		List<CustomerOpinion> opiniones = opinionService.consultarOpiniones(id);
 		return new ResponseEntity<>(opiniones, HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/opinion")
+	public ResponseEntity<List<CustomerOpinion>> obtenerTodasLasOpinions() {
+		List<CustomerOpinion> opiniones = opinionService.consultarTodasLasOpiniones();
+		return new ResponseEntity<>(opiniones, HttpStatus.OK);
+	}
+
 	@DeleteMapping("/opinion/{id}")
-	public ResponseEntity<String> eliminarOpinion(@PathVariable String id){
+	public ResponseEntity<String> eliminarOpinion(@PathVariable String id) {
 		try {
 			Optional<CustomerOpinion> opinion = opinionService.obtenerById(id);
 			if (!opinion.isPresent()) {
