@@ -10,10 +10,10 @@ import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 
 @Controller
-@RequestMapping("/recursos")
+@RequestMapping("/resource")
 public class ImagenesController {
 
-	@GetMapping("/{nombre}")
+	@GetMapping("/image/{nombre}")
     public ResponseEntity<Resource> obtenerImagen(@PathVariable String nombre) throws IOException {
 		Resource resource = (Resource) new PathResource("src/main/resources/static/pictures/" + nombre);
         if (!resource.exists()) {

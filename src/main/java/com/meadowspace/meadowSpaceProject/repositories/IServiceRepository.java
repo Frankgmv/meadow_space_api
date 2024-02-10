@@ -12,7 +12,7 @@ import com.meadowspace.meadowSpaceProject.entity.Services;
 @Repository
 public interface IServiceRepository extends JpaRepository<Services, String> {
 
-	// Buscar Servicio de propiedad
+	// Buscar multimedia de propiedad
 	@Query("SELECT ser FROM Services ser WHERE ser.property.id= :id")
-	public Optional<Services> findByProperty(@Param("id") String id);
+	public Optional<Services> findByPropertyId(@Param("id") String id);
 }

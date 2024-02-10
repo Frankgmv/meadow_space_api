@@ -26,26 +26,35 @@ public class MultimediaProperty {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getPicture() {
-		return picture;
-	}
-
-	public void setPicture(String picture) {
-		this.picture = picture;
-	}
 
     private String picture;
-	
 	
 	@ManyToOne
     @JoinColumn(name = "property_id")
     private Property property;
+	
+	
+	public Property getProperty() {
+		return property;
+	}
+
+	public void setProperty(Property property) {
+		this.property = property;
+	}
+
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getPicture() {
+		return picture;
+	}
+	
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 }

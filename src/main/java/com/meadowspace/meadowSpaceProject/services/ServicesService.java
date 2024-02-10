@@ -27,13 +27,13 @@ public class ServicesService {
 	}
 	
 	public Optional<Services> buscarByProperty(String id){
-		return serviceRepository.findByProperty(id);
+		return serviceRepository.findByPropertyId(id);
 	}
 	
 	public void crearServicio(DataService service) throws Exception {
 		validar(service);
 		
-		Optional<Services> existeServicio = serviceRepository.findByProperty(service.getProperty().getId());
+		Optional<Services> existeServicio = serviceRepository.findByPropertyId(service.getProperty().getId());
 		if(existeServicio.isPresent()) {
 			throw new Exception("El servicio ya esta insertado!!");
 		}

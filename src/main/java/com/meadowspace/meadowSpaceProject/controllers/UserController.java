@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,6 @@ public class UserController {
 	private final UserService userService;
 	UploadFilesService uploadFileService;
 
-	@Autowired
 	public UserController(UserService userService, UploadFilesService uploadFileService) {
 		this.userService = userService;
 		this.uploadFileService = uploadFileService;
@@ -121,8 +119,7 @@ public class UserController {
 			Optional<User> user = userService.obtenerUsuarioPorId(id);
 
 			if (user.isPresent() && user.get().getPicture() != null) {
-				String path = uploadFileService.deleteFile(user.get().getPicture());
-				System.out.println(path);
+				uploadFileService.deleteFile(user.get().getPicture());
 			}
 			userService.deleteUser(id);
 			return new ResponseEntity<>("Usuario Eliminado", HttpStatus.OK);
