@@ -1,6 +1,7 @@
 package com.meadowspace.meadowSpaceProject.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT us FROM User us WHERE us.email = :email")
     public List<User> buscarPorEmail(@Param("email") String email);
+	
+	Optional<User> findUserByEmail(String email);
 }
