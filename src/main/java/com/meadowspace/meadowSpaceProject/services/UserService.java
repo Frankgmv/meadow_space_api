@@ -32,6 +32,12 @@ public class UserService {
 			throw new Exception("El usuario con el ID " + id + " ya existe en la base de datos.");
 		}
 
+		List<User> existingEmail = userRepository.buscarPorEmail(email);
+
+		if (existingEmail.size() != 0) {
+			throw new Exception("El email " + email + " ya existe en la base de datos.");
+		}
+
 		User user = new User();
 
 		user.setId(id);
@@ -97,7 +103,7 @@ public class UserService {
 		}
 		userRepository.delete(user.get());
 	}
-	
+
 	private void validarUsuario(Long id, String name, String surname, String email, String phone, String cellphone,
 			String address, String password) throws Exception {
 		if (id == null) {
