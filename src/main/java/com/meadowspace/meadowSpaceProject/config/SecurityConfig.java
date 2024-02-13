@@ -1,7 +1,7 @@
 package com.meadowspace.meadowSpaceProject.config;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,11 +13,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import lombok.RequiredArgsConstructor;
-
-@Configurable
+@Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
 	
@@ -43,8 +40,8 @@ public class SecurityConfig {
 	
 	private RequestMatcher publicEndPoints() {
 		return new OrRequestMatcher(
-				new AntPathRequestMatcher("/resource/**"),
-				new AntPathRequestMatcher("/auth/**")
+				new AntPathRequestMatcher("/resource/*"),
+				new AntPathRequestMatcher("/auth/*")
 				); 
 	}
 
