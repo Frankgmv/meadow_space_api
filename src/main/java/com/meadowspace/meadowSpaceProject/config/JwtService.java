@@ -1,8 +1,10 @@
 package com.meadowspace.meadowSpaceProject.config;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -31,9 +33,10 @@ public class JwtService {
 	}
 
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+		 long expirationMillis = System.currentTimeMillis() + (1000 * 60 * 60 * 24);
 		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() * 1000 * 60 * 60 * 24))
+				.setExpiration(new Date(expirationMillis))
 				 .signWith(Keys.hmacShaKeyFor(SECRECT_KEY.getBytes()), SignatureAlgorithm.HS256).compact();
 				
 	}
@@ -56,12 +59,6 @@ public class JwtService {
 		return Keys.hmacShaKeyFor(keyByte);
 	}
 	
-	
-	public boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUserName(token);
-		return (username.equals(userDetails.getUsername()) && isTokenExpired(token));
-	}
-
 	private boolean isTokenExpired(String token) {
 		return getExpiration(token).before(new Date());
 	}
@@ -69,4 +66,19 @@ public class JwtService {
 	private Date getExpiration(String token) {
 		return getClaim(token, Claims::getExpiration);
 	}
+	private List<String> invalidTokens = new ArrayList<>();
+
+	public void invalidateToken(String token) {
+	    invalidTokens.add(token);
+	}
+
+	public boolean isTokenInvalid(String token) {
+	    return invalidTokens.contains(token);
+	}
+
+	public boolean validateToken(String token, UserDetails userDetails) {
+	    final String username = getUserName(token);
+	    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && !isTokenInvalid(token));
+	}
 }
+
