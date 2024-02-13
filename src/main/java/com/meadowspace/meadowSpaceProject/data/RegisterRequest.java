@@ -1,5 +1,7 @@
 package com.meadowspace.meadowSpaceProject.data;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.meadowspace.meadowSpaceProject.entity.Role;
 
 import lombok.AllArgsConstructor;
@@ -26,12 +28,21 @@ public class RegisterRequest {
 
     private String address;
     
+    private MultipartFile imagen;
     
     private String picture;
 
     private String password;
     
     private Role rol;
+    
+	public MultipartFile getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(MultipartFile imagen) {
+		this.imagen = imagen;
+	}
 
 	public Long getId() {
 		return id;

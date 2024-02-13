@@ -1,8 +1,10 @@
 package com.meadowspace.meadowSpaceProject.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.event.AuthenticationFailureServiceExceptionEvent;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +32,10 @@ public class AuthController {
 		this.jwtService = jwtService;
 	}
 
-	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+	@PostMapping( value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> register(@ModelAttribute RegisterRequest request) {
 		try {
-			return ResponseEntity.ok(authService.register(request));
+			return new ResponseEntity<>(authService.register(request), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -55,7 +57,7 @@ public class AuthController {
 			if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 				String jwt = authorizationHeader.substring(7);
 				jwtService.invalidateToken(jwt);
-				return ResponseEntity.ok("Logout exitoso");
+				return ResponseEntity.ok("Cierre exitoso");
 			} else {
 				return ResponseEntity.badRequest().body("No se proporcionó un token de autorización");
 			}

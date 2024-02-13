@@ -1,5 +1,8 @@
 package com.meadowspace.meadowSpaceProject.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,20 +14,18 @@ import com.meadowspace.meadowSpaceProject.data.AuthenticateRequest;
 import com.meadowspace.meadowSpaceProject.data.RegisterRequest;
 import com.meadowspace.meadowSpaceProject.entity.User;
 import com.meadowspace.meadowSpaceProject.repositories.IUserRepository;
-import com.meadowspace.meadowSpaceProject.services.impl.IUploadFilesService;
-
-import lombok.RequiredArgsConstructor;
+import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
 
 @Service
 public class AuthServiceImp implements AuthService {
 
-	private final IUploadFilesService uploadFilesService; 
+	private final UploadFilesService uploadFilesService;
 	private final IUserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthServiceImp(IUploadFilesService uploadFilesService, IUserRepository userRepository,
+	public AuthServiceImp(UploadFilesService uploadFilesService, IUserRepository userRepository,
 			PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
 		this.uploadFilesService = uploadFilesService;
 		this.userRepository = userRepository;
@@ -34,9 +35,20 @@ public class AuthServiceImp implements AuthService {
 	}
 
 	@Override
-	public AuthResponse register(RegisterRequest request) {
-		User user = new User();
+	public AuthResponse register(RegisterRequest request) throws Exception {
+		Optional<User> existeUser = userRepository.findById(request.getId());
+		List<User> existeEmail = userRepository.buscarPorEmail(request.getEmail());
 		
+		if(existeEmail.size() != 0 ) {
+			throw new Exception("Correo "+ request.getEmail() + " ya existe.");
+		}
+		
+		if(existeUser.isPresent()) {
+			throw new Exception(request.getId() + " ya está en uso.");
+		}
+		
+		User user = new User();
+
 		user.setId(request.getId());
 		user.setName(request.getName());
 		user.setSurname(request.getSurname());
@@ -47,11 +59,16 @@ public class AuthServiceImp implements AuthService {
 		user.setPicture(request.getPicture());
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setRol(request.getRol());
-				
+
+		if (request.getImagen() != null) {
+			String pathUrl = uploadFilesService.handleFileUpload(request.getImagen());
+			user.setPicture(pathUrl);
+		}
+
 		userRepository.save(user);
 
 		var jwtToken = jwtService.generateToken(user);
-		
+
 		AuthResponse response = new AuthResponse();
 		response.setToken(jwtToken);
 		return response;
@@ -59,8 +76,8 @@ public class AuthServiceImp implements AuthService {
 
 	@Override
 	public AuthResponse authenticate(AuthenticateRequest request) {
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+		authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 		var user = userRepository.findUserByEmail(request.getEmail()).orElseThrow();
 		var jwtToken = jwtService.generateToken(user);
 		AuthResponse response = new AuthResponse();
