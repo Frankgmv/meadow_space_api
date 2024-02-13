@@ -13,6 +13,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -40,9 +42,9 @@ public class SecurityConfig {
 	
 	private RequestMatcher publicEndPoints() {
 		return new OrRequestMatcher(
-				new AntPathRequestMatcher("/resource/image/**"),
-				new AntPathRequestMatcher("/auth/*")
-				); 
+				new AntPathRequestMatcher("/**", "GET"),
+				new AntPathRequestMatcher("/auth/**")
+				);
 	}
-
+    
 }
