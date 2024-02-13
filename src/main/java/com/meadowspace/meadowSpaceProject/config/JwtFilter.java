@@ -22,12 +22,15 @@ import lombok.RequiredArgsConstructor;
 public class JwtFilter extends OncePerRequestFilter{
 
 	private final UserDetailsService userDetailsService;
+	private final JwtService jwtService;
 	
-	public JwtFilter(UserDetailsService userDetailsService) {
-		super();
+	public JwtFilter(UserDetailsService userDetailsService, JwtService jwtService) {
 		this.userDetailsService = userDetailsService;
+		this.jwtService = jwtService;
 	}
-	
+
+
+
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request,
 									@NonNull HttpServletResponse response,
