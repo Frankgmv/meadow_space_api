@@ -33,7 +33,7 @@ public class JwtService {
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() * 1000 * 60 * 600 * 24))
+				.setExpiration(new Date(System.currentTimeMillis() * 1000 * 60 * 60 * 24))
 				 .signWith(Keys.hmacShaKeyFor(SECRECT_KEY.getBytes()), SignatureAlgorithm.HS256).compact();
 				
 	}
@@ -59,7 +59,7 @@ public class JwtService {
 	
 	public boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUserName(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		return (username.equals(userDetails.getUsername()) && isTokenExpired(token));
 	}
 
 	private boolean isTokenExpired(String token) {

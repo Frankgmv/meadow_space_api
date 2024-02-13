@@ -40,7 +40,7 @@ public class SecurityConfig {
 	
 	private RequestMatcher publicEndPoints() {
 		return new OrRequestMatcher(
-				new AntPathRequestMatcher("/resource/*"),
+				new AntPathRequestMatcher("/resource/image/**"),
 				new AntPathRequestMatcher("/auth/*")
 				); 
 	}
