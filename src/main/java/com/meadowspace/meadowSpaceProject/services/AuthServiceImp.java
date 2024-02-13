@@ -16,7 +16,6 @@ import com.meadowspace.meadowSpaceProject.services.impl.IUploadFilesService;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImp implements AuthService {
 
 	private final IUploadFilesService uploadFilesService; 
