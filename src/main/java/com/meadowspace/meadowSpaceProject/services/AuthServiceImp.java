@@ -16,7 +16,10 @@ import com.meadowspace.meadowSpaceProject.entity.User;
 import com.meadowspace.meadowSpaceProject.repositories.IUserRepository;
 import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImp implements AuthService {
 
 	private final UploadFilesService uploadFilesService;
@@ -25,15 +28,7 @@ public class AuthServiceImp implements AuthService {
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
 
-	public AuthServiceImp(UploadFilesService uploadFilesService, IUserRepository userRepository,
-			PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
-		this.uploadFilesService = uploadFilesService;
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.jwtService = jwtService;
-		this.authenticationManager = authenticationManager;
-	}
-
+	// Validate and register user
 	@Override
 	public AuthResponse register(RegisterRequest request) throws Exception {
 		Optional<User> existeUser = userRepository.findById(request.getId());
@@ -46,7 +41,7 @@ public class AuthServiceImp implements AuthService {
 		if(existeUser.isPresent()) {
 			throw new Exception(request.getId() + " ya está en uso.");
 		}
-		
+		//		Instanced user and fill fields
 		User user = new User();
 
 		user.setId(request.getId());

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.meadowspace.meadowSpaceProject.data.DataCategory;
+import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.entity.Category;
 import com.meadowspace.meadowSpaceProject.services.CategoryService;
 
@@ -31,9 +32,14 @@ public class CategoryController {
 	}
 
 	@GetMapping("/category")
-	public ResponseEntity<List<Category>> obtenerCategoria() {
+	public ResponseEntity<ResponseFormat> obtenerCategoria() {
 		List<Category> listCategory = categoryService.listarCategory();
-		return new ResponseEntity<>(listCategory, HttpStatus.OK);
+		ResponseFormat response = new ResponseFormat();
+		response.setData(listCategory);
+		response.setMessage("Lista de categorias");
+		response.setStatus(true);
+		response.setStatusCode(200);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping("/category/{id}")
