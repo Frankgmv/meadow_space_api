@@ -16,12 +16,16 @@ import org.springframework.core.io.Resource;
 @RequestMapping("/resource")
 public class ImagenesController {
 
+	/*
+	 * No estandarizar salida
+	 */
+
 	@GetMapping("/image/{nombre}")
-    public ResponseEntity<Resource> obtenerImagen(@PathVariable String nombre) throws IOException {
+	public ResponseEntity<Resource> obtenerImagen(@PathVariable String nombre) throws IOException {
 		Resource resource = (Resource) new PathResource("src/main/resources/static/pictures/" + nombre);
-        if (!resource.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().contentLength(resource.contentLength()).body(resource);
-    }
+		if (!resource.exists()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok().contentLength(resource.contentLength()).body(resource);
+	}
 }

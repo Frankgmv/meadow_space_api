@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.meadowspace.meadowSpaceProject.data.DataService;
+import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.entity.Services;
 import com.meadowspace.meadowSpaceProject.services.ServicesService;
+import com.meadowspace.meadowSpaceProject.utils.ApiControllerUtil;
 
 @Controller
 @RequestMapping("/data")
@@ -27,52 +29,52 @@ public class ServiceController {
 	}
 	
 	@GetMapping("/service")
-	public ResponseEntity<List<Services>> listarServicios(){
+	public ResponseEntity<ResponseFormat> listarServicios(){
 		List<Services> servicios = serviceService.listarServicios();
-		return new ResponseEntity<>(servicios, HttpStatus.OK);
+		return ApiControllerUtil.buildResponse(servicios, HttpStatus.OK, true, "Lista de servicios");
 	}
 	
 	// busquedas por el id de la propiedad
 	@GetMapping("/service/{id}")
-	public ResponseEntity<Services> buscarServicioByPropertyId(@PathVariable String id){
+	public ResponseEntity<ResponseFormat> buscarServicioByPropertyId(@PathVariable String id){
 			Optional<Services> service = serviceService.buscarByProperty(id);
 
 			if(service.isPresent()) {
-				return new ResponseEntity<>(service.get(), HttpStatus.OK);				
+				return ApiControllerUtil.buildResponse(service.get(), HttpStatus.OK, true, "List de servicios por propiedad");				
 			}else {
-				return ResponseEntity.notFound().build();
+				return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, "Servicio no encontrado");
 			}
 
 	}
 	
 	@PostMapping("/service")
-	public ResponseEntity<String> crearService(@RequestBody DataService dataService) {
+	public ResponseEntity<ResponseFormat> crearService(@RequestBody DataService dataService) {
 		try {
 			serviceService.crearServicio(dataService);
-			return new ResponseEntity<>("Servicio insertado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Servicio insertado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 	
 	@PutMapping("/service/{id}")
-	public ResponseEntity<String> updateService(@PathVariable String id, @RequestBody DataService dataService) {
+	public ResponseEntity<ResponseFormat> updateService(@PathVariable String id, @RequestBody DataService dataService) {
 		try {
 			dataService.setId(id);
 			serviceService.updateServicio(dataService);
-			return new ResponseEntity<>("Servicio Actualizado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Servicio actualizado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 	
 	@DeleteMapping("/service/{id}")
-	public ResponseEntity<String> deletePro(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> deletePro(@PathVariable String id) {
 		try {
 			serviceService.eliminarServico(id);
-			return new ResponseEntity<>("Servicio Eliminado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Servicio eliminado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 }

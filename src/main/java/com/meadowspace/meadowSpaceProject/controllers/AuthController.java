@@ -38,7 +38,7 @@ public class AuthController {
 
 			return ApiControllerUtil.buildResponse(data, HttpStatus.CREATED, true, "Registro exitoso");
 		} catch (Exception e) {
-			return ApiControllerUtil.buildResponse(null, HttpStatus.INTERNAL_SERVER_ERROR, false,e.getMessage());
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false,e.getMessage());
 		}
 	}
 
@@ -48,7 +48,7 @@ public class AuthController {
 			var data = authService.authenticate(request);
 			return ApiControllerUtil.buildResponse(data, HttpStatus.OK, true, "Inicio exitoso");
 		} catch (Exception e) {
-			return ApiControllerUtil.buildResponse(null, HttpStatus.INTERNAL_SERVER_ERROR, false, e.getMessage());
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 
@@ -66,7 +66,7 @@ public class AuthController {
 			
 			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Cierre de sesión exitoso");
 		} catch (Exception e) {
-			return ApiControllerUtil.buildResponse(null, HttpStatus.INTERNAL_SERVER_ERROR, false,e.getMessage());
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false,e.getMessage());
 		}
 	}
 

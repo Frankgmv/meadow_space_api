@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.meadowspace.meadowSpaceProject.data.DataUser;
+import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.entity.Role;
 import com.meadowspace.meadowSpaceProject.entity.User;
 import com.meadowspace.meadowSpaceProject.services.UserService;
 import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
+import com.meadowspace.meadowSpaceProject.utils.ApiControllerUtil;
 
 @RestController
 @RequestMapping("/data")
@@ -37,30 +39,31 @@ public class UserController {
 	}
 
 	@GetMapping("/user")
-	public ResponseEntity<List<User>> obtenerUsuario() {
+	public ResponseEntity<ResponseFormat> obtenerUsuario() {
 		List<User> listUser = userService.listarUser();
-		return new ResponseEntity<>(listUser, HttpStatus.OK);
+		return ApiControllerUtil.buildResponse(listUser, HttpStatus.OK, true, "Lista de usuarios");
 	}
 
 	@GetMapping("/user/{id}")
-	public ResponseEntity<User> obtenerUsuarioById(@PathVariable Long id) {
+	public ResponseEntity<ResponseFormat> obtenerUsuarioById(@PathVariable Long id) {
 		Optional<User> user = userService.obtenerUsuarioPorId(id);
 
 		if (user.isPresent()) {
-			return ResponseEntity.ok(user.get());
+			return ApiControllerUtil.buildResponse(user, HttpStatus.OK, true, "Usuarios obtenido");
 		} else {
-			return ResponseEntity.notFound().build();
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, "Usuarios no encontrado");
 		}
 	}
 
 	@PostMapping(value = "/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> postUser(@ModelAttribute DataUser dataUser,
+	public ResponseEntity<ResponseFormat> postUser(@ModelAttribute DataUser dataUser,
 			@RequestParam(required = false) MultipartFile imagen) {
 		try {
 			if (imagen != null && !imagen.isEmpty()) {
 				String uploadedFileUrl = uploadFileService.handleFileUpload(imagen);
 				dataUser.setPicture(uploadedFileUrl);
 			}
+
 			Role role = Role.valueOf(dataUser.getRol().toString());
 			dataUser.setRol(role);
 
@@ -68,14 +71,14 @@ public class UserController {
 					dataUser.getPhone(), dataUser.getCellphone(), dataUser.getAddress(), dataUser.getPicture(),
 					dataUser.getPassword(), dataUser.getRol());
 
-			return new ResponseEntity<>("usuario registrado", HttpStatus.CREATED);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Usuarios creado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 
 	@PutMapping(value = "/user/{id}")
-	public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody DataUser dataUser) throws Exception {
+	public ResponseEntity<ResponseFormat> updateUser(@PathVariable Long id, @RequestBody DataUser dataUser) throws Exception {
 		try {
 			if (dataUser.getRol() != null) {
 				Role role = Role.valueOf(dataUser.getRol().toString());
@@ -85,14 +88,14 @@ public class UserController {
 					dataUser.getEmail(), dataUser.getPhone(), dataUser.getCellphone(), dataUser.getAddress(),
 					dataUser.getRol(), dataUser.getPassword());
 
-			return new ResponseEntity<>("Usuario actualizado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Usuarios actualizado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 	
 	@PutMapping("/user-picture/{id}")
-	public ResponseEntity<String> updateUserPicture(@PathVariable Long id, @RequestParam(required = false) MultipartFile imagen) throws Exception {
+	public ResponseEntity<ResponseFormat> updateUserPicture(@PathVariable Long id, @RequestParam(required = false) MultipartFile imagen) throws Exception {
 		try {
 			Optional<User> user = userService.obtenerUsuarioPorId(id);
 
@@ -102,19 +105,19 @@ public class UserController {
 			
 			if (imagen != null) {
 				String uploadedFileUrl = uploadFileService.handleFileUpload(imagen);			
-				User updatedUser = userService.updateUserPicture(id, uploadedFileUrl);
+				userService.updateUserPicture(id, uploadedFileUrl);
 			}else {
-				User updatedUser = userService.updateUserPicture(id, null);				
+				userService.updateUserPicture(id, null);				
 			}
 
-			return new ResponseEntity<>("Foto atualizada", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Foto de perfil actualizada");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 
 	@DeleteMapping(value = "/user/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) throws IOException {
+	public ResponseEntity<ResponseFormat> deleteUser(@PathVariable Long id) throws IOException {
 		try {
 			Optional<User> user = userService.obtenerUsuarioPorId(id);
 
@@ -123,9 +126,9 @@ public class UserController {
 			if (user.isPresent() && user.get().getPicture() != null) {
 				uploadFileService.deleteFile(user.get().getPicture());
 			}
-			return new ResponseEntity<>("Usuario Eliminado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Usuario eliminado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 

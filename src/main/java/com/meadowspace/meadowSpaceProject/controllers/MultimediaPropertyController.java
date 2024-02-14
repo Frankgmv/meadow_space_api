@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.meadowspace.meadowSpaceProject.data.DataMultimediaProperty;
+import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.entity.MultimediaProperty;
 import com.meadowspace.meadowSpaceProject.entity.User;
 import com.meadowspace.meadowSpaceProject.services.MultimediaPropertyService;
 import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
+import com.meadowspace.meadowSpaceProject.utils.ApiControllerUtil;
 
 @Controller
 @RequestMapping("/resource")
@@ -33,30 +35,30 @@ public class MultimediaPropertyController {
 	}
 
 	@PostMapping(value = "/property", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> uploadImageProperty(@ModelAttribute DataMultimediaProperty dataMulProperty) {
+	public ResponseEntity<ResponseFormat> uploadImageProperty(@ModelAttribute DataMultimediaProperty dataMulProperty) {
 		try {
 			String uploadedFileUrl = "";
 			if (dataMulProperty.getImagen() != null && !dataMulProperty.getImagen().isEmpty()) {
 				uploadedFileUrl = uploadFileService.handleFileUpload(dataMulProperty.getImagen());
 				dataMulProperty.setPicture(uploadedFileUrl);
 				multimediaPropertyService.crearArchivo(dataMulProperty);
-				return new ResponseEntity<>("Imagen subida", HttpStatus.CREATED);
+				return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Imagen subida");
 			} else {
 				throw new Exception("Inserta la imagen");
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 
 	@GetMapping("/property/{id}")
-	public ResponseEntity<List<MultimediaProperty>> obtenerFilesByPropertyId(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> obtenerFilesByPropertyId(@PathVariable String id) {
 		List<MultimediaProperty> files = multimediaPropertyService.obtenerFilesByPropertyId(id);
-		return new ResponseEntity<>(files, HttpStatus.OK);
+		return ApiControllerUtil.buildResponse(files, HttpStatus.OK, true, "Imagen Obtenidas");
 	}
 
 	@DeleteMapping("/property/{id}")
-	public ResponseEntity<String> eliminarById(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> eliminarById(@PathVariable String id) {
 		try {
 			Optional<MultimediaProperty> file = multimediaPropertyService.obtenerFileById(id);
 			if (!file.isPresent()) {
@@ -68,9 +70,9 @@ public class MultimediaPropertyController {
 			if (file.get().getPicture() != null) {
 				uploadFileService.deleteFile(file.get().getPicture());
 			}
-			return new ResponseEntity<>("Archivo eliminado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Imagen Eliminada");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 

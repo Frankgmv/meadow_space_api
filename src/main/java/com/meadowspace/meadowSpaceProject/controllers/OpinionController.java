@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.data.dataOpinionAndMult;
 import com.meadowspace.meadowSpaceProject.entity.CustomerOpinion;
 import com.meadowspace.meadowSpaceProject.services.OpinionService;
 import com.meadowspace.meadowSpaceProject.services.img.UploadFilesService;
+import com.meadowspace.meadowSpaceProject.utils.ApiControllerUtil;
 
 @Controller
 @RequestMapping("/data")
@@ -32,7 +34,7 @@ public class OpinionController {
 	}
 
 	@PostMapping(value = "/opinion", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> crearOpinion(@ModelAttribute dataOpinionAndMult dataRequest) {
+	public ResponseEntity<ResponseFormat> crearOpinion(@ModelAttribute dataOpinionAndMult dataRequest) {
 		try {
 			String uploadedFileUrl = "";
 			if (dataRequest.getImagen() != null && !dataRequest.getImagen().isEmpty()) {
@@ -41,32 +43,38 @@ public class OpinionController {
 			}
 
 			opinionService.crearCommentOpinion(dataRequest);
-			return new ResponseEntity<>("Comentario subido", HttpStatus.CREATED);
+			
+			return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Comentario subido");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 
 	@GetMapping("/opinion/{id}")
-	public ResponseEntity<CustomerOpinion> obtenerOpinionById(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> obtenerOpinionById(@PathVariable String id) {
 			Optional<CustomerOpinion> opinion = opinionService.obtenerById(id);
-			return new ResponseEntity<>(opinion.get(), HttpStatus.OK);
+			if(opinion.isEmpty()) {
+				return ApiControllerUtil.buildResponse(null, HttpStatus.NO_CONTENT, false, "Comentario no encontrado");
+			}
+			return ApiControllerUtil.buildResponse(opinion.get(), HttpStatus.OK, true, "Comentario obtenido");
 	}
 
 	@GetMapping("/opinion-property/{id}")
-	public ResponseEntity<List<CustomerOpinion>> obtenerOpinions(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> obtenerOpinions(@PathVariable String id) {
 		List<CustomerOpinion> opiniones = opinionService.consultarOpiniones(id);
-		return new ResponseEntity<>(opiniones, HttpStatus.OK);
+		
+		return ApiControllerUtil.buildResponse(opiniones, HttpStatus.OK, true, "Lista de comentarios por propiedad");
 	}
 
 	@GetMapping("/opinion")
-	public ResponseEntity<List<CustomerOpinion>> obtenerTodasLasOpinions() {
+	public ResponseEntity<ResponseFormat> obtenerTodasLasOpinions() {
 		List<CustomerOpinion> opiniones = opinionService.consultarTodasLasOpiniones();
-		return new ResponseEntity<>(opiniones, HttpStatus.OK);
+		
+		return ApiControllerUtil.buildResponse(opiniones, HttpStatus.OK, true, "Lista de comentarios");
 	}
 
 	@DeleteMapping("/opinion/{id}")
-	public ResponseEntity<String> eliminarOpinion(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> eliminarOpinion(@PathVariable String id) {
 		try {
 			Optional<CustomerOpinion> opinion = opinionService.obtenerById(id);
 			if (!opinion.isPresent()) {
@@ -78,9 +86,9 @@ public class OpinionController {
 			if (opinion.get().getPicture() != null) {
 				uploadFileService.deleteFile(opinion.get().getPicture());
 			}
-			return new ResponseEntity<>("Comentario Eliminado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Comentario eliminado");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 }

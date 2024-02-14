@@ -19,12 +19,12 @@ import com.meadowspace.meadowSpaceProject.data.DataCategory;
 import com.meadowspace.meadowSpaceProject.data.ResponseFormat;
 import com.meadowspace.meadowSpaceProject.entity.Category;
 import com.meadowspace.meadowSpaceProject.services.CategoryService;
+import com.meadowspace.meadowSpaceProject.utils.ApiControllerUtil;
 
 @Controller
 @RequestMapping("/data")
 public class CategoryController {
 
-	@Autowired
 	private final CategoryService categoryService;
 
 	public CategoryController(CategoryService categoryService) {
@@ -34,53 +34,46 @@ public class CategoryController {
 	@GetMapping("/category")
 	public ResponseEntity<ResponseFormat> obtenerCategoria() {
 		List<Category> listCategory = categoryService.listarCategory();
-		ResponseFormat response = new ResponseFormat();
-		response.setData(listCategory);
-		response.setMessage("Lista de categorias");
-		response.setStatus(true);
-		response.setStatusCode(200);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ApiControllerUtil.buildResponse(listCategory, HttpStatus.OK, true, "Lista de categorias");
 	}
 
 	@GetMapping("/category/{id}")
-	public ResponseEntity<Category> obtenerUsuarioById(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> obtenerUsuarioById(@PathVariable String id) {
 		Optional<Category> categoria = categoryService.obtenerCategoryPorId(id);
 		if (categoria.isPresent()) {
-			return ResponseEntity.ok(categoria.get());
+			return ApiControllerUtil.buildResponse(categoria.get(), HttpStatus.OK, true, "categoria obtenida");
 		} else {
-			return ResponseEntity.notFound().build();
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, "categoria no encontrada");
 		}
 	}
 	
 	@PostMapping("/category")
-	public ResponseEntity<String> createCategory(@RequestBody DataCategory dataCategory) {
+	public ResponseEntity<ResponseFormat> createCategory(@RequestBody DataCategory dataCategory) {
 	  try {
-	    
 	    categoryService.crearCategory(dataCategory.getCategory());
-	    return new ResponseEntity<>("categoria creada", HttpStatus.CREATED);
+	    return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Categoria publicada");
 	  } catch (Exception e) {
-	    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	    return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 	  }
 	}
 	
 	@PutMapping("/category/{id}")
-	public ResponseEntity<String> updateCategory(@PathVariable String id, @RequestBody DataCategory dataCategory) throws Exception {
+	public ResponseEntity<ResponseFormat> updateCategory(@PathVariable String id, @RequestBody DataCategory dataCategory) throws Exception {
 		try {
 			categoryService.updateCategory(id, dataCategory.getCategory());
-			return new ResponseEntity<>("Categoria actualizado", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Categoria actualizada");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
 	
 	@DeleteMapping("/category/{id}")
-	public ResponseEntity<String> eliminarCategoria(@PathVariable String id) {
+	public ResponseEntity<ResponseFormat> eliminarCategoria(@PathVariable String id) {
 		try {
 			categoryService.deleteCategory(id);
-			return new ResponseEntity<>("Categoria eliminada", HttpStatus.OK);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.OK, true, "Categoria eliminada");
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
 	}
-
 }
