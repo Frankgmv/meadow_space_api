@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.meadowspace.meadowSpaceProject.repositories.IUserRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
-@RequiredArgsConstructor
 public class AppConfig {
 
 	private final IUserRepository userRepository;
