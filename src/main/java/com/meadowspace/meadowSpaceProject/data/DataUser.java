@@ -1,6 +1,8 @@
 package com.meadowspace.meadowSpaceProject.data;
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.meadowspace.meadowSpaceProject.entity.Role;
 
 public class DataUser {
@@ -22,7 +24,18 @@ public class DataUser {
 
     private String password;
     
-    private Role rol;
+    private MultipartFile imagen;
+    
+    
+    public MultipartFile getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(MultipartFile imagen) {
+		this.imagen = imagen;
+	}
+
+	private Role rol;
 
 	public Long getId() {
 		return id;

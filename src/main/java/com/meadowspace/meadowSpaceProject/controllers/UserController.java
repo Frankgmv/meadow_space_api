@@ -56,11 +56,10 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ResponseFormat> postUser(@ModelAttribute DataUser dataUser,
-			@RequestParam(required = false) MultipartFile imagen) {
+	public ResponseEntity<ResponseFormat> postUser(@ModelAttribute DataUser dataUser) {
 		try {
-			if (imagen != null && !imagen.isEmpty()) {
-				String uploadedFileUrl = uploadFileService.handleFileUpload(imagen);
+			if (dataUser.getImagen() != null && !dataUser.getImagen().isEmpty()) {
+				String uploadedFileUrl = uploadFileService.handleFileUpload(dataUser.getImagen());
 				dataUser.setPicture(uploadedFileUrl);
 			}
 
@@ -71,7 +70,7 @@ public class UserController {
 					dataUser.getPhone(), dataUser.getCellphone(), dataUser.getAddress(), dataUser.getPicture(),
 					dataUser.getPassword(), dataUser.getRol());
 
-			return ApiControllerUtil.buildResponse(null, HttpStatus.CREATED, true, "Usuarios creado");
+			return ApiControllerUtil.buildResponse(dataUser.toString(), HttpStatus.CREATED, true, "Usuarios creado");
 		} catch (Exception e) {
 			return ApiControllerUtil.buildResponse(null, HttpStatus.BAD_REQUEST, false, e.getMessage());
 		}
