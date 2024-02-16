@@ -9,8 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -23,10 +21,10 @@ public class Reservation {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	private Double price;
-	private String inictialDate;
+	private String initialDate;
 	private String finishDate;
 	private String descriptionEvent;
-	
+
 	public String getId() {
 		return id;
 	}
@@ -43,12 +41,12 @@ public class Reservation {
 		this.price = price;
 	}
 
-	public String getInictialDate() {
-		return inictialDate;
+	public String getInitialDate() {
+		return initialDate;
 	}
 
-	public void setInictialDate(String inictialDate) {
-		this.inictialDate = inictialDate;
+	public void setInitialDate(String initialDate) {
+		this.initialDate = initialDate;
 	}
 
 	public String getFinishDate() {
